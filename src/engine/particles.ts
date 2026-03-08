@@ -37,9 +37,11 @@ export function createOrbs(
 ): Orb[] {
   const cx = viewWidth / 2;
   const cy = viewHeight / 2;
-  const baseRadius = Math.min(viewWidth, viewHeight) * 0.055;
-  // Spread: distance from centre to each orb
-  const spread = Math.min(viewWidth, viewHeight) * 0.18;
+  const minDim = Math.min(viewWidth, viewHeight);
+  const isMobile = viewWidth < 768;
+  const baseRadius = minDim * (isMobile ? 0.045 : 0.055);
+  // Spread: distance from centre to each orb (tighter on mobile)
+  const spread = minDim * (isMobile ? 0.14 : 0.18);
 
   // Triangle: top, bottom-left, bottom-right
   const angleOffset = -Math.PI / 2; // start from top
@@ -121,8 +123,10 @@ export function repositionOrbs(
 ): void {
   const cx = viewWidth / 2;
   const cy = viewHeight / 2;
-  const baseRadius = Math.min(viewWidth, viewHeight) * 0.055;
-  const spread = Math.min(viewWidth, viewHeight) * 0.18;
+  const minDim = Math.min(viewWidth, viewHeight);
+  const isMobile = viewWidth < 768;
+  const baseRadius = minDim * (isMobile ? 0.045 : 0.055);
+  const spread = minDim * (isMobile ? 0.14 : 0.18);
   const angleOffset = -Math.PI / 2;
 
   for (let i = 0; i < orbs.length; i++) {

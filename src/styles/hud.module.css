@@ -78,6 +78,36 @@
   text-decoration: underline;
 }
 
+@media (max-width: 767px) {
+  .identity {
+    top: 16px;
+    left: 16px;
+  }
+
+  .name {
+    font-size: 15px;
+  }
+
+  .tagline {
+    font-size: 11px;
+  }
+
+  .prompt {
+    bottom: 28px;
+    font-size: 11px;
+  }
+
+  .socials {
+    bottom: 16px;
+    right: 16px;
+    gap: 12px;
+  }
+
+  .socialLink {
+    font-size: 11px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .prompt {
     transition: none;

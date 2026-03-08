@@ -150,6 +150,45 @@
   animation-fill-mode: forwards !important;
 }
 
+@media (max-width: 767px) {
+  .overlay {
+    padding: 64px 16px 32px;
+  }
+
+  .backButton {
+    top: 16px;
+    left: 16px;
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .sectionTitle {
+    margin-bottom: 24px;
+  }
+
+  .cardGrid {
+    gap: 14px;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 10px;
+  }
+
+  .cardTitle {
+    font-size: 15px;
+  }
+
+  .cardSubtitle {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .cardDetail {
+    font-size: 13px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card,
   .sectionTitle,

@@ -75,7 +75,8 @@ export function createConstellations(
   viewWidth: number,
   viewHeight: number,
 ): ConstellationSet {
-  const letterH = viewHeight * 0.08;
+  const isMobile = viewWidth < 768;
+  const letterH = isMobile ? viewHeight * 0.05 : viewHeight * 0.08;
   const spacing = letterH * 0.55;
 
   // Per-letter y jitter for organic feel (pre-seeded for stability)
@@ -140,8 +141,13 @@ export function createConstellations(
     return { stars: allStars, lines: allLines };
   }
 
-  const word0 = buildWord(WORD_ALIM, viewWidth * 0.19, viewHeight * 0.18, 0, 15);
-  const word1 = buildWord(WORD_ZAIB, viewWidth * 0.81, viewHeight * 0.80, 4, -14);
+  const alimX = isMobile ? viewWidth * 0.38 : viewWidth * 0.19;
+  const alimY = isMobile ? viewHeight * 0.14 : viewHeight * 0.18;
+  const zaibX = isMobile ? viewWidth * 0.62 : viewWidth * 0.81;
+  const zaibY = isMobile ? viewHeight * 0.84 : viewHeight * 0.80;
+
+  const word0 = buildWord(WORD_ALIM, alimX, alimY, 0, 15);
+  const word1 = buildWord(WORD_ZAIB, zaibX, zaibY, 4, -14);
 
   return { words: [word0, word1] };
 }
