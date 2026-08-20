@@ -8,9 +8,25 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+.astro
+.vercel
 dist
 dist-ssr
 *.local
+preview-*.png
+.env
+.env.*
+!.env.example
+archive/
+
+# Local AI assistant tooling
+.codex/
+.claude/
+.agents/
+.gemini/
+AGENTS.md
+CLAUDE.md
+CODEX*.md
 
 # Ignore markdown files except README.md
 *.md

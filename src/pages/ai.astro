@@ -1,0 +1,213 @@
+---
+import "../styles/global.css";
+import "../styles/ai.css";
+import { ArrowLeft, ArrowUp, Moon, Sun } from "@lucide/astro";
+import {
+  MAX_MESSAGES_PER_REQUEST,
+  MAX_USER_MESSAGE_LENGTH,
+} from "../lib/ai-config";
+
+const suggestions = [
+  "What are Alim's strongest technical skills?",
+  "What AI experience does Alim have?",
+  "What interests Alim as an engineer?",
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Ask Alim Zaib's portfolio assistant about his experience, projects and technical interests."
+    />
+    <meta id="theme-color" name="theme-color" content="#f7f7f5" />
+    <link rel="icon" type="image/png" href="/memoji.png" />
+    <title>Ask about Alim</title>
+    <script is:inline>
+      (() => {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+          .matches
+          ? "dark"
+          : "light";
+
+        try {
+          document.documentElement.dataset.theme =
+            localStorage.getItem("portfolio-theme") || systemTheme;
+        } catch {
+          document.documentElement.dataset.theme = systemTheme;
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      id="theme-toggle"
+      type="button"
+      aria-label="Toggle color theme"
+      title="Toggle color theme"
+    >
+      <Moon
+        class="theme-icon theme-icon-moon"
+        size={16}
+        stroke-width={1.8}
+        aria-hidden="true"
+      />
+      <Sun
+        class="theme-icon theme-icon-sun"
+        size={16}
+        stroke-width={1.8}
+        aria-hidden="true"
+      />
+    </button>
+
+    <main class="ai-main">
+      <nav class="ai-nav" aria-label="Page navigation">
+        <a href="/">
+          <ArrowLeft size={14} stroke-width={1.8} aria-hidden="true" />
+          <span>home</span>
+        </a>
+        <span
+          class="ai-wip"
+          title="Responses may occasionally be slow or incomplete"
+        >
+          <span aria-hidden="true">🧪</span>
+          <span>free model · results may vary</span>
+        </span>
+      </nav>
+
+      <header class="ai-header">
+        <div class="ai-heading-row">
+          <h1>Ask about me</h1>
+          <div
+            class="ai-status"
+            id="ai-status"
+            role="status"
+            aria-live="polite"
+          >
+            <span class="ai-status-dot" aria-hidden="true"></span>
+            <span id="ai-status-text">AI · ready</span>
+          </div>
+        </div>
+        <p>
+          Ask my portfolio assistant about my experience, projects, technologies
+          I’ve worked with, or what I’m interested in
+        </p>
+      </header>
+
+      <section
+        class="chat"
+        aria-label="Chat with Alim's portfolio assistant"
+        data-max-messages={MAX_MESSAGES_PER_REQUEST}
+      >
+        <div
+          class="chat-log"
+          id="chat-log"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions text"
+          aria-busy="false"
+        >
+        </div>
+
+        <div class="suggestions" id="suggestions">
+          <p>Suggested questions</p>
+          <div class="suggestion-list">
+            {
+              suggestions.map((question) => (
+                <button
+                  type="button"
+                  class="suggestion"
+                  data-question={question}
+                >
+                  {question}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <form class="chat-form" id="chat-form" novalidate>
+          <label class="sr-only" for="chat-input"
+            >Ask a question about Alim</label
+          >
+          <div class="composer">
+            <textarea
+              id="chat-input"
+              name="message"
+              rows="1"
+              maxlength={MAX_USER_MESSAGE_LENGTH}
+              placeholder="Ask a question about Alim…"
+              aria-describedby="chat-help"
+              required></textarea>
+            <button id="send-button" class="send-button" type="submit" disabled>
+              <span class="sr-only">Send question</span>
+              <ArrowUp size={17} stroke-width={2} aria-hidden="true" />
+            </button>
+          </div>
+          <div class="composer-meta">
+            <p id="chat-help">Enter to send · Shift+Enter for a new line</p>
+            <button
+              id="clear-button"
+              class="clear-button"
+              type="button"
+              disabled
+            >
+              Clear conversation
+            </button>
+          </div>
+        </form>
+
+        <noscript>
+          <p class="chat-noscript">
+            JavaScript is required to use the portfolio assistant
+          </p>
+        </noscript>
+      </section>
+
+      <footer class="ai-footer">
+        <p>Answers are generated from the information in this portfolio</p>
+      </footer>
+    </main>
+
+    <script>
+      import "../scripts/ai-chat";
+
+      const themeToggle = document.querySelector("#theme-toggle");
+      const themeColor = document.querySelector("#theme-color");
+
+      function syncThemeControl(theme: "light" | "dark") {
+        if (themeToggle instanceof HTMLButtonElement) {
+          const nextTheme = theme === "dark" ? "light" : "dark";
+          themeToggle.ariaLabel = `Switch to ${nextTheme} mode`;
+          themeToggle.title = `Switch to ${nextTheme} mode`;
+          themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
+        }
+
+        if (themeColor instanceof HTMLMetaElement) {
+          themeColor.content = theme === "dark" ? "#0e0d0c" : "#f7f7f5";
+        }
+      }
+
+      const initialTheme =
+        document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+      syncThemeControl(initialTheme);
+
+      themeToggle?.addEventListener("click", () => {
+        const nextTheme =
+          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = nextTheme;
+        syncThemeControl(nextTheme);
+
+        try {
+          localStorage.setItem("portfolio-theme", nextTheme);
+        } catch {
+          // The selected theme still applies when storage is unavailable.
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,316 @@
+---
+import "../styles/global.css";
+import { icon } from "@fortawesome/fontawesome-svg-core";
+import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import {
+  ArrowUpRight,
+  ChevronDown,
+  Mail,
+  Moon,
+  Sparkles,
+  Sun,
+} from "@lucide/astro";
+import {
+  contactLinks,
+  education,
+  experience,
+  featuredProjects,
+  person,
+} from "../data/portfolio";
+
+const githubIcon = icon(faGithub).html.join("");
+const linkedinIcon = icon(faLinkedin).html.join("");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="The personal portfolio of Alim Zaib." />
+    <meta id="theme-color" name="theme-color" content="#f7f7f5" />
+    <link rel="icon" type="image/png" href="/memoji.png" />
+    <title>Alim Zaib</title>
+    <script is:inline>
+      (() => {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+          .matches
+          ? "dark"
+          : "light";
+
+        try {
+          document.documentElement.dataset.theme =
+            localStorage.getItem("portfolio-theme") || systemTheme;
+        } catch {
+          document.documentElement.dataset.theme = systemTheme;
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      id="theme-toggle"
+      type="button"
+      aria-label="Toggle color theme"
+      title="Toggle color theme"
+    >
+      <Moon
+        class="theme-icon theme-icon-moon"
+        size={16}
+        stroke-width={1.8}
+        aria-hidden="true"
+      />
+      <Sun
+        class="theme-icon theme-icon-sun"
+        size={16}
+        stroke-width={1.8}
+        aria-hidden="true"
+      />
+    </button>
+
+    <main>
+      <header class="profile">
+        <h1>{person.name}</h1>
+      </header>
+
+      <p class="intro">{person.introduction}</p>
+
+      <nav class="links" aria-label="Portfolio links">
+        <a
+          class="social-link"
+          href={contactLinks.github}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="brand-icon" set:html={githubIcon} />
+          <span class="social-label">github</span>
+          <ArrowUpRight
+            class="social-arrow"
+            size={14}
+            stroke-width={1.8}
+            aria-hidden="true"
+          />
+        </a>
+        <a
+          class="social-link"
+          href={contactLinks.linkedin}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="brand-icon" set:html={linkedinIcon} />
+          <span class="social-label">linkedin</span>
+          <ArrowUpRight
+            class="social-arrow"
+            size={14}
+            stroke-width={1.8}
+            aria-hidden="true"
+          />
+        </a>
+        <a class="social-link" href={contactLinks.email}>
+          <Mail
+            class="social-icon"
+            size={14}
+            stroke-width={1.8}
+            aria-hidden="true"
+          />
+          <span class="social-label">email</span>
+          <ArrowUpRight
+            class="social-arrow"
+            size={14}
+            stroke-width={1.8}
+            aria-hidden="true"
+          />
+        </a>
+        <a class="social-link ai-link" href="/ai">
+          <span class="ai-link-icon" aria-hidden="true">
+            <Sparkles size={13} stroke-width={1.9} />
+          </span>
+          <span class="social-label">ask my AI</span>
+          <ArrowUpRight
+            class="social-arrow"
+            size={14}
+            stroke-width={1.8}
+            aria-hidden="true"
+          />
+        </a>
+      </nav>
+
+      <section>
+        <h2>Experience</h2>
+        <div class="experience-list">
+          {
+            experience.map((item) => {
+              const descriptionLink = item.descriptionLink;
+              const linkStart = descriptionLink
+                ? item.description.indexOf(descriptionLink.label)
+                : -1;
+
+              return (
+                <details class="experience-item">
+                  <summary class="experience-summary">
+                    <div class="experience-layout">
+                      <div class="company-logo">
+                        <img
+                          src={item.logo}
+                          alt={`${item.company} logo`}
+                          width="36"
+                          height="36"
+                        />
+                      </div>
+                      <div class="experience-copy">
+                        <div class="item-heading">
+                          <div>
+                            <h3>{item.company}</h3>
+                            <p>{item.role}</p>
+                          </div>
+                          <div class="experience-meta">
+                            <p class="dates">{item.dates}</p>
+                            <ChevronDown
+                              class="experience-chevron"
+                              size={15}
+                              stroke-width={1.8}
+                              aria-hidden="true"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </summary>
+                  <div class="experience-details">
+                    <ul>
+                      <li>
+                        {descriptionLink && linkStart >= 0 ? (
+                          <>
+                            {item.description.slice(0, linkStart)}
+                            <a
+                              class="experience-product-link"
+                              href={descriptionLink.href}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {descriptionLink.label}
+                            </a>
+                            {item.description.slice(
+                              linkStart + descriptionLink.label.length,
+                            )}
+                          </>
+                        ) : (
+                          item.description
+                        )}
+                      </li>
+                      {item.highlights.map((point) => (
+                        <li>{point}</li>
+                      ))}
+                      {item.detailPlaceholders.map((point) => (
+                        <li class="experience-placeholder">[{point}]</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+              );
+            })
+          }
+        </div>
+      </section>
+
+      <section>
+        <h2>Projects</h2>
+        <div class="project-list">
+          {
+            featuredProjects.map((project) => (
+              <a
+                class="project"
+                href={project.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span class="project-title">
+                  <strong>{project.title}</strong>
+                  <ArrowUpRight
+                    class="project-arrow"
+                    size={15}
+                    stroke-width={1.8}
+                    aria-hidden="true"
+                  />
+                </span>
+                <span>{project.description}</span>
+              </a>
+            ))
+          }
+        </div>
+        <a
+          class="more-link"
+          href={contactLinks.github}
+          target="_blank"
+          rel="noreferrer"
+        >
+          More on GitHub →
+        </a>
+      </section>
+
+      <section>
+        <h2>Education</h2>
+        <div class="education-layout">
+          <div class="company-logo education-logo">
+            <img
+              src={education.logo}
+              alt={`${education.institution} logo`}
+              width="42"
+              height="18"
+            />
+          </div>
+          <div class="education">
+            <div>
+              <h3>{education.institution}</h3>
+              <p>{education.qualification}</p>
+            </div>
+            <p class="dates">{education.dates}</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>&copy; 2026 Alim Zaib</p>
+        <p>Last updated 18 July 2026</p>
+      </footer>
+    </main>
+
+    <script>
+      import "../scripts/experience-details";
+
+      const themeToggle = document.querySelector("#theme-toggle");
+      const themeColor = document.querySelector("#theme-color");
+
+      function syncThemeControl(theme: "light" | "dark") {
+        if (themeToggle instanceof HTMLButtonElement) {
+          const nextTheme = theme === "dark" ? "light" : "dark";
+          themeToggle.ariaLabel = `Switch to ${nextTheme} mode`;
+          themeToggle.title = `Switch to ${nextTheme} mode`;
+          themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
+        }
+
+        if (themeColor instanceof HTMLMetaElement) {
+          themeColor.content = theme === "dark" ? "#0e0d0c" : "#f7f7f5";
+        }
+      }
+
+      const initialTheme =
+        document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+      syncThemeControl(initialTheme);
+
+      themeToggle?.addEventListener("click", () => {
+        const nextTheme =
+          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = nextTheme;
+        syncThemeControl(nextTheme);
+
+        try {
+          localStorage.setItem("portfolio-theme", nextTheme);
+        } catch {
+          // The selected theme still applies when storage is unavailable.
+        }
+      });
+    </script>
+  </body>
+</html>
