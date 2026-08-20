@@ -1,5 +1,7 @@
 # Alim Zaib - Portfolio
 
+[alimzaib.com](https://alimzaib.com)
+
 A quiet, one-page portfolio built with Astro.
 
 ## Built with
